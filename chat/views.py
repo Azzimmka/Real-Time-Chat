@@ -1,12 +1,18 @@
-from idlelib.configdialog import font_sample_text
+# chat/views.py
 
 from django.shortcuts import render, redirect
-from django.contrib.auth import  authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserLoginForm
-# Create your views here.
+from django.contrib.auth.decorators import login_required
 
-#TODO Представление для регистрации
+
+# Представление для списка чатов (главная страница)
+@login_required  # <-- Декоратор, который требует авторизации
+def chat_list(request):
+    return render(request, 'chat/chat_list.html')
+
+# Представление для регистрации
 def user_register(request):
     if request.method == 'POST':
         # Если это POST-запрос, то получаем данные из формы
@@ -19,7 +25,7 @@ def user_register(request):
 
             # Отправляем сообщение об успехе и перенаправляем на страницу входа
             messages.success(request, 'Регистрация прошла успешно! Теперь вы можете войти.')
-            return  redirect('login')
+            return redirect('login')
     else:
         # Если это GET-запрос, показываем пустую форму
         form = UserRegistrationForm()
@@ -27,31 +33,32 @@ def user_register(request):
     return render(request, 'chat/register.html', {'form': form})
 
 
-#TODO Представление для входа
+# Представление для входа
 def user_login(request):
     if request.method == 'POST':
         # Если это POST-запрос, получаем данные из формы
-        form = UserRegistrationForm(request.POST)
+        form = UserLoginForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             user = authenticate(request, username=cd['username'], password=cd['password'])
 
-            if user is not  None:
+            if user is not None:
                 # Если пользователь существует и пароль верный, авторизуем его
                 login(request, user)
                 messages.success(request, 'Вы успешно вошли!')
-                return  redirect('chat_list')
+                return redirect('chat_list')  # Перенаправляем на страницу чатов
             else:
                 # Если данные неверны, показываем ошибку
                 messages.error(request, 'Неверное имя пользователя или пароль.')
     else:
+        # Если это GET-запрос, показываем пустую форму
         form = UserLoginForm()
 
-    return  render(request, 'chat/login.html', {'form':form})
+    return render(request, 'chat/login.html', {'form': form})
 
 
-# TODO Представление для выхода
+# Представление для выхода
 def user_logout(request):
     logout(request)
-    messages.info(request, 'Вы вышли из системы')
+    messages.info(request, 'Вы вышли из системы.')
     return redirect('login')

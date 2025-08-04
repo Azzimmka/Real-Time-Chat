@@ -1,0 +1,127 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+<div class="flex flex-1 flex-col md:flex-row h-full">
+    <div id="sidebar" class="w-full md:w-80 bg-white md:border-r border-gray-200 flex flex-col">
+        <div class="p-4 border-b border-gray-200">
+            <div class="flex items-center mb-4">
+                <i class="ri-menu-line text-2xl text-gray-500 mr-4 cursor-pointer md:hidden"></i>
+                <input type="text" placeholder="Поиск" class="w-full p-2 rounded-full bg-gray-100 border border-gray-200 focus:outline-none">
+            </div>
+            <div class="flex space-x-4 overflow-x-auto py-2">
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-blue-500 flex items-center justify-center text-white text-3xl font-bold cursor-pointer">
+                        <i class="ri-add-line"></i>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Моя история</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden border-2 border-transparent hover:border-blue-500 cursor-pointer transition-all duration-200">
+                        <img src="https://via.placeholder.com/150" alt="Аватар" class="object-cover w-full h-full">
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Имя</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden border-2 border-transparent hover:border-blue-500 cursor-pointer transition-all duration-200">
+                        <img src="https://via.placeholder.com/150" alt="Аватар" class="object-cover w-full h-full">
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Имя</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto" id="contacts-list">
+            <div class="contact-item flex items-center p-3 hover:bg-gray-100 cursor-pointer md:border-l-2 md:border-blue-500 md:bg-blue-50 active-contact" data-chat-id="chat-1">
+                <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl mr-3">М</div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-800">Мама</h3>
+                    <p class="text-sm text-gray-500">Привет, как дела?</p>
+                </div>
+                <div class="text-xs text-gray-400">12:30</div>
+            </div>
+            <div class="contact-item flex items-center p-3 hover:bg-gray-100 cursor-pointer" data-chat-id="chat-2">
+                <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white text-xl mr-3">Д</div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-800">Друг</h3>
+                    <p class="text-sm text-gray-500">Ок, скоро буду.</p>
+                </div>
+                <div class="text-xs text-gray-400">12:25</div>
+            </div>
+            <div class="contact-item flex items-center p-3 hover:bg-gray-100 cursor-pointer" data-chat-id="chat-3">
+                <div class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white text-xl mr-3">К</div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-800">Коллега</h3>
+                    <p class="text-sm text-gray-500">Не забудь про отчёт!</p>
+                </div>
+                <div class="text-xs text-gray-400">12:00</div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-gray-200 flex justify-between items-center">
+            <i class="ri-user-line text-2xl text-gray-500 cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+            <i class="ri-settings-line text-2xl text-gray-500 cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+            <i class="ri-moon-line text-2xl text-gray-500 cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+            <a href="{% url 'logout' %}" class="text-blue-500 cursor-pointer">
+                <i class="ri-logout-box-line text-2xl"></i>
+            </a>
+        </div>
+    </div>
+
+    <div id="chat-area" class="flex-1 flex-col hidden md:flex">
+        <div id="chat-1" class="chat-content flex-1 flex-col ">
+            <div class="p-4 border-b border-gray-200 bg-white flex items-center">
+                <i id="back-button-1" class="ri-arrow-left-line text-2xl text-gray-500 mr-4 cursor-pointer md:hidden"></i>
+                <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl mr-3">М</div>
+                <div class="flex-1">
+                    <h1 class="text-lg font-semibold text-gray-800">Мама</h1>
+                    <p class="text-sm text-gray-500">была недавно</p>
+                </div>
+                <div class="flex space-x-4 text-gray-500">
+                    <i class="ri-search-line text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+                    <i class="ri-phone-line text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+                    <i class="ri-more-2-line text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+                </div>
+            </div>
+
+            <div class="flex-1 p-4 overflow-y-auto">
+                <div class="bg-gray-200 text-center text-sm p-2 rounded-lg text-gray-600 mb-4">Начните свой чат с Мамой</div>
+                <div class="flex mb-4">
+                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-lg mr-3">М</div>
+                    <div class="flex-1">
+                        <div class="bg-white p-3 rounded-xl rounded-bl-none shadow-sm inline-block max-w-lg">
+                            <p class="text-gray-800">Привет, как у тебя дела? Что нового?</p>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-1">12:30 PM</div>
+                    </div>
+                </div>
+                <div class="flex justify-end mb-4">
+                    <div class="flex-1 text-right">
+                        <div class="bg-blue-500 text-white p-3 rounded-xl rounded-br-none shadow-sm inline-block max-w-lg">
+                            <p>Всё отлично, спасибо! Учусь веб-разработке и пытаюсь воссоздать интерфейс Telegram.</p>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-1">12:31 PM</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-lg ml-3">Я</div>
+                </div>
+            </div>
+
+
+                <div class="p-4 border-t border-gray-200 bg-white flex items-center space-x-2 w-full  ">
+                    <i class="ri-attachment-line text-2xl text-gray-500 cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+                    <i class="ri-mic-line text-2xl text-gray-500 cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+                    <input type="text" placeholder="Напишите сообщение..." class="flex-1 p-3 rounded-full bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="ri-emotion-happy-line text-2xl text-gray-500 cursor-pointer hover:text-blue-500 transition-colors duration-200"></i>
+                    <i class="ri-send-plane-fill text-2xl text-blue-500 cursor-pointer"></i>
+                </div>
+
+        </div>
+
+        <div id="chat-2" class="chat-content flex-1 flex-col hidden">
+            </div>
+
+        <div id="chat-3" class="chat-content flex-1 flex-col hidden">
+            </div>
+    </div>
+</div>
+<script src="script.js"></script>
+{% endblock %}

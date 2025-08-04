@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Telegram Clone{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex h-screen font-sans">
+
+    {% if messages %}
+        <ul class="messages absolute top-4 left-4 right-4 z-50">
+            {% for message in messages %}
+                <li class="p-4 rounded-lg shadow-md {% if message.tags %}bg-{{ message.tags }}-100 text-{{ message.tags }}-800{% else %}bg-gray-200 text-gray-800{% endif %} mb-2">
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <script >
+        document.addEventListener('DOMContentLoaded', () => {
+            const contacts = document.querySelectorAll('.contact-item');
+            const sidebar = document.getElementById('sidebar');
+            const chatArea = document.getElementById('chat-area');
+            const backButtons = document.querySelectorAll('[id^=back-button]');
+
+            // Определяем, является ли экран мобильным
+            const isMobile = () => window.innerWidth < 768;
+
+            // Функция для переключения активного чата
+            function switchChat(newChatId) {
+                // Скрываем все чаты
+                document.querySelectorAll('.chat-content').forEach(chat => {
+                    chat.classList.add('hidden');
+                    chat.classList.remove('flex');
+                });
+
+                // Показываем нужный чат
+                const newChat = document.getElementById(newChatId);
+                if (newChat) {
+                    newChat.classList.remove('hidden');
+                    newChat.classList.add('flex');
+                }
+
+                // Логика для мобильных устройств
+                if (isMobile()) {
+                    sidebar.classList.add('hidden');
+                    sidebar.classList.remove('flex');
+                    chatArea.classList.remove('hidden');
+                    chatArea.classList.add('flex');
+                }
+            }
+
+            // Добавляем обработчик событий на каждый контакт
+            contacts.forEach(contact => {
+                contact.addEventListener('click', () => {
+                    // Удаляем активный класс у всех контактов
+                    contacts.forEach(c => c.classList.remove('border-l-2', 'border-blue-500', 'bg-blue-50', 'active-contact'));
+
+                    // Добавляем активный класс к текущему контакту на больших экранах
+                    if (!isMobile()) {
+                        contact.classList.add('border-l-2', 'border-blue-500', 'bg-blue-50', 'active-contact');
+                    }
+
+                    // Получаем ID чата из data-атрибута и переключаем чат
+                    const newChatId = contact.dataset.chatId;
+                    switchChat(newChatId);
+                });
+            });
+
+            // Обработчик для кнопок "Назад"
+            backButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (isMobile()) {
+                        sidebar.classList.remove('hidden');
+                        sidebar.classList.add('flex');
+                        chatArea.classList.add('hidden');
+                        chatArea.classList.remove('flex');
+
+                        // Убираем активный класс у всех контактов при возврате
+                        contacts.forEach(c => c.classList.remove('border-l-2', 'border-blue-500', 'bg-blue-50', 'active-contact'));
+                    }
+                });
+            });
+
+            // Инициализация при загрузке страницы
+            if (!isMobile()) {
+                document.querySelector('.active-contact').classList.add('border-l-2', 'border-blue-500', 'bg-blue-50');
+                document.getElementById('chat-1').classList.remove('hidden');
+                document.getElementById('chat-1').classList.add('flex');
+            } else {
+                sidebar.classList.remove('hidden');
+                sidebar.classList.add('flex');
+                chatArea.classList.add('hidden');
+                chatArea.classList.remove('flex');
+            }
+        });
+    </script>
+</body>
+</html>
